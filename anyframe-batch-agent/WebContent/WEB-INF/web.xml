@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+	Licensed to the Apache Software Foundation (ASF) under one or more
+	contributor license agreements.  See the NOTICE file distributed with
+	this work for additional information regarding copyright ownership.
+	The ASF licenses this file to You under the Apache License, Version 2.0
+	(the "License"); you may not use this file except in compliance with
+	the License.  You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+-->
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<display-name>Batch Agent</display-name>
+	<description>
+		Anyframe Enterprise Batch Framework Server Agent
+	</description>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/beans.xml</param-value>
+	</context-param>
+	<listener>
+		<listener-class>
+			com.sds.anyframe.batch.agent.BatchAgentListener
+		</listener-class>
+	</listener>
+
+	<!-- JSPC servlet mappings start -->
+	<servlet>
+		<servlet-name>resourceList</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>resourcesInJob</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>logList</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>xmlViewer</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>samViewer</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>vsamViewer</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>jobEdit</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>stepInfoList</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>jobLauncher</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>xmlFileList</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>dbHandle</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>jobMonitor</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>jobFileHandler</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>agentManager</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>stepStateClient</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>jobStateClient</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>logList</servlet-name>
+		<url-pattern>/logList.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>resourceList</servlet-name>
+		<url-pattern>/resourceList.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>resourcesInJob</servlet-name>
+		<url-pattern>/resourcesInJob.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>xmlViewer</servlet-name>
+		<url-pattern>/xmlViewer.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>samViewer</servlet-name>
+		<url-pattern>/samViewer.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>vsamViewer</servlet-name>
+		<url-pattern>/vsamViewer.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>jobEdit</servlet-name>
+		<url-pattern>/jobEdit.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>jobLauncher</servlet-name>
+		<url-pattern>/jobLauncher.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>xmlFileList</servlet-name>
+		<url-pattern>/xmlFileList.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>stepInfoList</servlet-name>
+		<url-pattern>/stepInfoList.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>dbHandle</servlet-name>
+		<url-pattern>/dbHandle.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>jobMonitor</servlet-name>
+		<url-pattern>/jobMonitor.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>jobFileHandler</servlet-name>
+		<url-pattern>/jobFileHandler.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>agentManager</servlet-name>
+		<url-pattern>/agentManager.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>jobStateClient</servlet-name>
+		<url-pattern>/jobStateClient.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>stepStateClient</servlet-name>
+		<url-pattern>/stepStateClient.do</url-pattern>
+	</servlet-mapping>
+</web-app>

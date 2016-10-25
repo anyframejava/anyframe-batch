@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<project default="package_all" basedir=".">
+	<property name="src" location="src/main/java"/>
+	<property name="resource" location="src/main/resources"/>
+	<property name="build" location="build/classes"/>
+	<property name="dist" location="dist"/>
+	<property name="lib" location="lib"/>
+	
+	<target name="init">
+		<delete dir="${build}" />
+		<mkdir dir="${build}"/>
+	</target>
+	 
+	<target name="compile" depends="init">
+		<path id="lib.path.ref">
+			<fileset dir="${lib}" includes="*.jar" />
+		</path>
+		<echo message="${toString:lib.path.ref}" />
+		<javac source="1.6" srcdir="${src}" destdir="${build}" classpath="${toString:lib.path.ref}" />
+		<copy file="${resource}/com/sds/anyframe/batch/config/xml/schema_4.1.xsd" todir="${build}/com/sds/anyframe/batch/config/xml"/>
+	</target>
+	
+	<target name="package_all" depends="compile">
+		<jar jarfile="${dist}/anyframe-enterprise-batch-runtime.jar">
+			<fileset dir="${build}"/>
+			<fileset dir="${resource}" includes="META-INF/**"/>
+		</jar>
+	</target>
+
+	<target name="package_core" depends="compile">
+		<jar jarfile="${dist}/anyframe-enterprise-batch-runtime-core.jar">
+			<fileset dir="${build}" excludes="com\sds\anyframe\batch\core\step\ShellStep.class 
+				com\sds\anyframe\batch\infra\support\ByteResourceFactoryBean.class
+				com\sds\anyframe\batch\infra\support\ByteResourceFactoryBean$1.class
+				com\sds\anyframe\batch\infra\file\ByteReader.class
+				com\sds\anyframe\batch\infra\file\ByteUpdater.class
+				com\sds\anyframe\batch\infra\file\ByteWriter.class
+				com\sds\anyframe\batch\infra\file\support\AnyframeBufferedInputStream.class
+				com\sds\anyframe\batch\infra\file\support\AnyframeBufferedOutputStream.class"/>
+			<fileset dir="src/main/resources" includes="META-INF/**"/>
+		</jar>
+	</target>
+	
+	<target name="package_ext" depends="compile">
+		<jar jarfile="${dist}/anyframe-enterprise-batch-runtime-ext.jar">
+			<fileset dir="${build}" includes="com\sds\anyframe\batch\core\step\ShellStep.class 
+			com\sds\anyframe\batch\infra\support\ByteResourceFactoryBean.class
+			com\sds\anyframe\batch\infra\support\ByteResourceFactoryBean$1.class
+			com\sds\anyframe\batch\infra\file\ByteReader.class
+			com\sds\anyframe\batch\infra\file\ByteUpdater.class
+			com\sds\anyframe\batch\infra\file\ByteWriter.class
+			com\sds\anyframe\batch\infra\file\support\AnyframeBufferedInputStream.class
+			com\sds\anyframe\batch\infra\file\support\AnyframeBufferedOutputStream.class"/>
+		</jar>
+	</target>
+	
+</project>

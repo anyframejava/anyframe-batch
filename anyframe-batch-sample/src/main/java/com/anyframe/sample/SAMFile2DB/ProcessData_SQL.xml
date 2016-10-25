@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sql>
+
+	<query id="insert">
+		insert into BATCH_TEST (no1, no2, no3, date1, timestamp1, name, address, description) values (?, ?, ?, ?, ?, ?, ?, ?)       
+	</query>
+		
+</sql>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<!-- Use this property configurer in the case of no encryption for the property password in jdbc.properties
+		<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+		<list>
+		<value>classpath:server.properties</value>
+		<value>classpath:jdbc.properties</value>
+		</list>
+		</property>
+		</bean>
+	-->
+
+	<bean id="propertyConfigurer"
+		class="org.jasypt.spring.properties.EncryptablePropertyPlaceholderConfigurer">
+		<constructor-arg ref="configurationEncryptor" />
+		<property name="locations">
+			<list>
+				<value>classpath:server.properties</value>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+
+	</bean>
+
+	<bean id="environmentVariablesConfiguration"
+		class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+		<property name="algorithm" value="PBEWithMD5AndDES" />
+		<property name="passwordSysPropertyName" value="BATCH_KEY" />
+	</bean>
+
+	<bean id="configurationEncryptor"
+		class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<property name="config" ref="environmentVariablesConfiguration" />
+	</bean>
+
+	<bean id="resourceDao"
+		class="com.sds.anyframe.batch.agent.dao.ResourceDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="jobDao"
+		class="com.sds.anyframe.batch.agent.dao.JobDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="lobHandler" ref="lobHandler" />
+	</bean>
+
+	<bean id="stepDao"
+		class="com.sds.anyframe.batch.agent.dao.StepDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="lobHandler" ref="lobHandler" />
+		<property name="resourceDao" ref="resourceDao" />
+	</bean>
+
+	<bean id="jobMonitorDao"
+		class="com.sds.anyframe.batch.agent.dao.JobMonitorDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="beanFactory"
+		class="com.sds.anyframe.batch.agent.bean.BeanFactory">
+	</bean>
+
+	<bean id="jobStateContext"
+		class="com.sds.anyframe.batch.agent.state.job.JobStateContext">
+		<property name="jobObserver" ref="stepStateContext" />
+		<property name="jobDao" ref="jobDao" />
+	</bean>
+
+	<bean id="resourceLockManager"
+		class="com.sds.anyframe.batch.agent.concurrent.ResourceLockManagerImpl">
+		<property name="resourceDao" ref="resourceDao" />
+	</bean>
+
+	<bean id="resourceLockClient"
+		class="com.sds.anyframe.batch.agent.concurrent.ResourceLockClient">
+	</bean>
+
+	<bean id="stepStateContext"
+		class="com.sds.anyframe.batch.agent.state.step.StepStateContext">
+		<property name="stepDao" ref="stepDao" />
+		<property name="stepObserver" ref="resourceLockClient" />
+	</bean>
+
+	<bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="dataSource" destroy-method="close"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName"
+			value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery"
+			value="${batch.agent.database.validationSql}" />
+		<property name="maxActive"
+			value="${database.connection.maxActive}" />
+		<property name="maxIdle" value="${database.connection.maxIdle}" />
+		<property name="initialSize"
+			value="${database.connection.initialSize}" />
+		<property name="maxWait" value="${database.connection.maxWait}" />
+	</bean>
+
+	<bean id="lobHandler"
+		class="org.springframework.jdbc.support.lob.DefaultLobHandler">
+	</bean>
+
+</beans>

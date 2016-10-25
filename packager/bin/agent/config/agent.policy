@@ -1,0 +1,5 @@
+policy.operators=100.5.48.43
+policy.runJob=true
+policy.killJob=true
+policy.userCommandUrl=usercommander.jar
+policy.userCommandClass=com.sds.anyframe.batch.agent.command.SampleUserCommander

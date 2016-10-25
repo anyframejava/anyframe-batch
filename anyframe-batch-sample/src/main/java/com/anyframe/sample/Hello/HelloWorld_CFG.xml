@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xslt="http://xml.apache.org/xslt"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" 
+       xsi:schemaLocation="http://www.anyframejava.org/schema/batch 
+                           http://www.anyframejava.org/schema/batch/schema.xsd
+                           http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+                           http://www.springframework.org/schema/jee
+                           http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+
+		
+	<job id="HelloWorldJob" name="HelloWorldJob" xmlns="http://www.anyframejava.org/schema/batch">
+		<description>로그에 'Hello World'만 출력하는 샘플용 배치작업입니다.</description>
+		
+		<step id="helloWorld" name="helloWorld" type="java" class="com.anyframe.sample.Hello.HelloWorld">
+			<description>로그에 'Hello World'만 출력하는 스탭.</description>
+		</step>
+
+	</job>
+	
+</beans>

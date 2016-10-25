@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sql>
+
+	<query id="select">
+		SELECT no1, no2, no3, date1, timestamp1, name, address, description FROM BATCH_TEST order by no1 asc
+	</query>
+	
+</sql>

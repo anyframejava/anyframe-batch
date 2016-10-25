@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xslt="http://xml.apache.org/xslt"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" 
+       xsi:schemaLocation="http://www.anyframejava.org/schema/batch 
+                           http://www.anyframejava.org/schema/batch/schema.xsd
+                           http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+                           http://www.springframework.org/schema/jee
+                           http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+
+		
+	<job id="DB2VSAMFile" name="DB2VSAMFile" xmlns="http://www.anyframejava.org/schema/batch">
+		<description>DB 데이터를 생성하고 DB로부터 파일로 결과를 처리하는 샘플용 배치 작업</description>
+		
+		<step id="createData" name="createData" type="java" class="com.anyframe.sample.CreateData.CreateDbData">
+			<description>샘플용 데이터를 생성하는 스텝</description>
+			<resources>
+				<writer id="writer" type="DB" url="DS_DEFAULT"/>
+			</resources>
+		</step>
+
+		<step id="processData" name="processData" type="java" class="com.anyframe.sample.DB2VSAMFile.ProcessData">
+			<description>입력 파일(DB)로부터 데이터를 가공하여 결과를 출력 파일(DB)에 기록하는 스텝</description>
+			<resources>
+				<reader id="reader" type="DB"  url="DS_DEFAULT"/>
+				<writer id="writer" type="VSAM" url="/batch/sample/DB2VSAMFile/Sample.txt.out"/>
+			</resources>
+		</step>
+		
+		<step id="createDataWithoutVo" name="createDataWithoutVo" type="java" class="com.anyframe.sample.CreateData.CreateDbDataWithoutVo">
+			<description>샘플용 데이터를 생성하는 스텝</description>
+			<resources>
+				<writer id="writer" type="DB" url="DS_DEFAULT"/>
+			</resources>
+		</step>
+
+		<step id="processDataWithoutVo" name="processDataWithoutVo" type="java" class="com.anyframe.sample.DB2VSAMFile.ProcessDataWithoutVo">
+			<description>입력 파일(DB)로부터 데이터를 가공하여 결과를 출력 파일(DB)에 기록하는 스텝</description>
+			<resources>
+				<reader id="reader" type="DB"  url="DS_DEFAULT"/>
+				<writer id="writer" type="VSAM" url="/batch/sample/DB2VSAMFile/Sample_noVo.txt.out"/>
+			</resources>
+		</step>
+	</job>
+	
+</beans>

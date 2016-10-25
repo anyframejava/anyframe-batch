@@ -1,0 +1,64 @@
+Anyframe Batch 프로젝트 내에 사용된 외부 오픈 소스의 경우 원 오픈 소스의 라이센스 정책을 따른다. 아래는 각 외부 오픈 소스의 정보(라이센스, 소스 코드 및 라이브러리 다운로드 등)를 얻을 수 있는 사이트 URL이므로 참고하도록 한다.
+
+1. Anyframe Batch Agent Libraries
+1) Apache Derby aka Cloudscape : http://db.apache.org/derby/, Apache Software License 2.0
+2) Apache Jakarta Commons Logging : http://commons.apache.org/logging/, Apache Software License 2.0
+3) Apache Jakarta Log4j 1.2.15 : http://logging.apache.org/log4j/1.2/, Apache Software License 2.0
+4) as3commons-lang : https://github.com/AS3Commons/as3commons-lang/, Apache Software License 2.0
+5) cglib-wrappers : http://code.google.com/p/cglib-wrappers/, Apache Software License 2.0
+6) Commons-Collections with Generics : http://sourceforge.net/projects/collections/, Apache Software License 2.0
+7) Apache Commons DBCP 1.2.2 : http://commons.apache.org/dbcp/, Apache Software License 2.0
+8) Apache Commons IO 1.4 : http://commons.apache.org/io/, Apache Software License 2.0 
+9) Apache Commons Pool 1.5.3 : http://commons.apache.org/pool/, Apache Software License 2.0
+10) Hessian Binary Web Service Protocol : http://hessian.caucho.com/, Apache License 1.1
+11) jasypt: java simplified encryption 1.7 : http://sourceforge.net/projects/jasypt/, Apache Software License 2.0
+12) jdbc-derby : https://rubyforge.org/projects/jruby-extras/, Apache Software License 2.0
+13) JGroups - A Toolkit for Reliable Multicast Communication : http://www.jgroups.org/index.html/, LGPL 2.1
+14) JUnit 4.4 : http://www.junit.org/, Common Public License 1.0
+
+2. Anyframe Batch Agent Interface Libraries
+1) Apache Jakarta Commons Logging : http://commons.apache.org/logging/, Apache Software License 2.0
+2) Apache Jakarta Log4j 1.2.15 : http://logging.apache.org/log4j/1.2/, Apache Software License 2.0
+3) as3commons-lang : https://github.com/AS3Commons/as3commons-lang/, Apache Software License 2.0
+4) Commons-Collections with Generics : http://sourceforge.net/projects/collections/, Apache Software License 2.0
+5) Apache Commons DBCP 1.2.2 : http://commons.apache.org/dbcp/, Apache Software License 2.0
+6) Apache Commons IO 1.4 : http://commons.apache.org/io/, Apache Software License 2.0 
+7) Apache Commons Pool 1.5.3 : http://commons.apache.org/pool/, Apache Software License 2.0
+8) Hessian : http://rubyforge.org/projects/hessian/, BSD 2.0
+9) Hyperic SIGAR : http://support.hyperic.com/display/SIGAR/Home, Apache Software License 2.0
+10) JUnit 4.4 : http://www.junit.org/, Common Public License 1.0
+11) Oracle JDBC Drivers : http://www.oracle.com/technetwork/indexes/downloads/index.html, Oracle Technology Network Development and Distribution 01-2009 License
+12) p6spy  : http://sourceforge.net/projects/p6spy/, Apache License 1.1
+13) Javax Servlet API 2.5 : http://java.sun.com/products/servlet/LICENSE, Sun Microsystems, Inc.  Binary Code License
+14) Spring Framework - spring-webflow   : http://www.springsource.org/, Apache Software License 2.0
+
+3. Anyframe Batch Manager Libraries
+1) Apache Jakarta Commons Logging : http://commons.apache.org/logging/, Apache Software License 2.0
+2) Apache Jakarta Log4j 1.2.15 : http://logging.apache.org/log4j/1.2/, Apache Software License 2.0
+3) Apache Jakarta Velocity : http://velocity.apache.org/ , Apache Software License 2.0
+4) Apache POI : http://poi.apache.org/ , Apache Software License 2.0
+5) as3commons-lang : https://github.com/AS3Commons/as3commons-lang/, Apache Software License 2.0
+6) Commons Collections for JDK 1.5  : http://sourceforge.net/projects/collections-j15/, Apache Software License 2.0
+7) Apache Commons DBCP 1.2.2 : http://commons.apache.org/dbcp/, Apache Software License 2.0
+8) Apache Commons IO 1.4 : http://commons.apache.org/io/, Apache Software License 2.0 
+9) Apache Commons Pool 1.5.3 : http://commons.apache.org/pool/, Apache Software License 2.0
+10) Eclipse Rich Client Platform (RCP) : http://wiki.eclipse.org/index.php/Rich_Client_Platform, Eclipse Public License - v 1.0
+11) Feed'n Read : http://sourceforge.net/projects/fnr/, Common Public License 1.0
+12) Hessian Binary Web Service Protocol : http://hessian.caucho.com/, Apache License 1.1
+13) JUnit 4.6 : http://www.junit.org/, Common Public License 1.0
+
+4. Anyframe Batch Runtime Libraries
+1) AspectJ : http://www.aspectj.org, Eclipse Public License - v 1.0
+2) AOP Alliance (Java/J2EE AOP standard) 1.0 : http://sourceforge.net/projects/aopalliance/, Apache Software License 2.0
+3) Apache Jakarta Commons IO 2.0.1 : http://commons.apache.org/io/ , Apache Software License 2.0
+4) Apache Jakarta Commons Logging : http://commons.apache.org/logging/, Apache Software License 2.0
+5) Apache Commons Lang 2.4 : http://commons.apache.org/lang/, Apache Software License 2.0
+6) Apache Jakarta Log4j 1.2.15 : http://logging.apache.org/log4j/1.2/, Apache Software License 2.0
+7) Apache Commons Pool 1.5.5 : http://commons.apache.org/pool/, Apache Software License 2.0
+8) as3commons-lang : https://github.com/AS3Commons/as3commons-lang/, Apache Software License 2.0
+9) ASM 3.3 : http://asm.objectweb.org, BSD License
+10) Code Generation Library - CGLIB : http://cglib.sourceforge.net/, Apache Software License 2.0
+11) Codehaus - Sonar : http://www.codehaus.org/, Apache Software License 2.0
+12) Commons-Collections with Generics : http://sourceforge.net/projects/collections/, Apache Software License 2.0
+13) Apache Commons DBCP 1.2.2 : http://commons.apache.org/dbcp/, Apache Software License 2.0
+

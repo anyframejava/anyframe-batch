@@ -1,0 +1,77 @@
+Anyframe Batch Framework Installation
+
+A. BatchAgent
+1. Batch Agent 관련 테이블 생성
+- bin/agent/config/ddl 폴더 하위의 DBMS별 .sql 파일을 참조하여  Batch Agent 에서 사용하는 테이블을 생성한다.
+
+2. anyframe-batch-agent-1.0.0.war 파일을 서버에 배포
+- Tomcat에 Batch Agent를 설치하는 경우, Tomcat 호환버전은 5.5.x 임
+- 배포명 : batchagent.war
+
+3. bin/agent/config 폴더의 파일을 {server_home}/agent 폴더 하위에 복사
+- Tomcat의 경우,  {tomcat_home}/bin/catalina.sh에 아래와 같이 반드시 설정 경로를 클래스 패스에 추가한다.
+CLASSPATH="$CLASSPATH":"$CATALINA_HOME"/agent.
+
+4. 설치 후 {server_home}/agent하위의 다음 각 설정 파일의 내용을 해당 환경에 적합하도록 수정
+4-1. /agent/agent-tcp.xml : 아래 설정 중 "ip" 부분을 실제 Agent가 설치되는 서버 IP로 변경함
+1)  <TCP bind_addr="ip"
+         bind_port="7800"
+         loopback="true"
+         recv_buf_size="${tcp.recv_buf_size:20M}"
+         send_buf_size="${tcp.send_buf_size:640K}"
+2)
+    <TCPPING timeout="3000"
+             initial_hosts="${jgroups.tcpping.initial_hosts:ip[7800]}"
+             port_range="2"
+             num_initial_members="2"/>             
+             
+4-2. /agent/jdbc.properties : 1에서 생성한 테이블에 대한 JDBC 접속정보를 해당 환경에 적합하도록 수정함
+jdbc.driverClassName=oracle.jdbc.OracleDriver
+jdbc.url=jdbc:oracle:thin:@localhost:port:sid
+jdbc.username=user
+jdbc.password=pass
+
+4-3. /agent/log4j.xml       : 로그파일 생성위치를 해당 환경에 맞게 수정함
+
+4-4. /agent/runtime.properties : 배치 어플리케이션이 동작하기 위한 설정을 해당 환경에 적합하도록 수정함
+ -runtime.baseDir : root path of batch application project
+ 	            /XXX/App
+ -runtime.executeShell : the name of execute shell
+                    /XXX/App/config/common/batchjobrun.sh
+ -runtime.killShell : the name of kill shell 
+                    /XXX/App/config/common/batchjobkill.sh 
+ -runtime.shellPath : location of shell 
+                    /config/common/ 
+ -runtime.buildPath : the location of Job xml 	
+                     build 
+ -runtime.shell : /bin/sh 
+ -runtime.samPath : the top level of samfile's location 
+ -runtime.logPath 
+
+
+B. BatchRuntime
+1. 다음 jar 파일들을 배치 어플리케이션 참조 라이브러리로 설정한다.
+bin/runtime/anyframe-batch-agent-interfaces-1.0.0.jar
+bin/runtime/anyframe-batch-runtime-1.0.0.jar
+bin/runtime/lib/*.jar
+
+2. bin/runtime/config 디렉토리 하위의 다음 파일들을 해당 환경에 적합하도록 수정한다.
+ - log4j.xml : 로그파일 생성위치를 해당 환경에 맞게 수정함
+ - batch.properties : BatchAgent IP & batch.log.directory
+ - ./common/common.env : JAVA_HOME, BASE_DIR
+ - ./spring/batch/jdbc.properties : JDBC Properties 
+
+% 배치 어플리케이션 프로젝트 구조는 source/example 하위의 샘플 프로젝트 구성을 참고한다.
+
+C. BatchManager
+1. plugin installation
+해당 환경에서 사용하는 이클립스에 적합한 방식으로 Batch Manager 플러그인을 설치한다.
+이때, /bin/manager/anyframe-batch-manager-1.0.0.zip 파일을 Archive 파일로 지정하여 설치한다.
+
+2. 배치 어플리케이션 프로젝트 하위에 /templates 폴더를 생성하고, bin/manager/templates/server_list.xml을 복사한다.
+- server_list.xml 파일에 Batch Agent 서버의 목록을 추가한다.
+
+
+
+                               
+                             

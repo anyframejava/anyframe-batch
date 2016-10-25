@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <properties>
+	<encodingtype>UTF-8</encodingtype>
+	<jdkversion>1.6</jdkversion>
+	</properties>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.anyframe.batch</groupId>
+	<artifactId>anyframe.enterprise.batch.manager</artifactId>
+	<name>Anyframe Batch Manager</name>
+	<version>3.0.5.1</version>
+	<packaging>jar</packaging>
+
+
+	<!-- Build Settings -->
+	<build>
+		<plugins>
+		<plugin>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.3.2</version>
+			<configuration>
+				<source>${jdkversion}</source>
+				<target>${jdkversion}</target>
+				<encoding>${encodingtype}</encoding>
+			</configuration>
+		</plugin>
+		<plugin>
+     		<groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-deploy-plugin</artifactId>
+		    <version>2.5</version>
+		    <configuration>
+		        <updateReleaseInfo>true</updateReleaseInfo>
+		    </configuration>
+		</plugin>
+		<!-- JavaDoc creation  -->
+		  <plugin>
+		  	<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<executions>
+				<execution>
+					<id>attach-javadocs</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		   </plugin>
+		   <!--  ant build script run -->
+		   <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-antrun-plugin</artifactId>
+		    <executions>
+		      <execution>
+		        <phase>compile</phase>
+		        <goals>
+		          <goal>run</goal>
+		        </goals>
+		        <configuration>
+		          <tasks>
+		            <ant antfile="build.xml">
+		            </ant>
+		          </tasks>
+		        </configuration>
+		      </execution>
+		    </executions>
+		  </plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+	<!-- Compile Scope Libraries -->
+		<dependency>
+			<groupId>com.anyframe.batch</groupId>
+			<artifactId>anyframe-enterprise-batch-agent-interfaces</artifactId>
+			<version>4.0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.anyframe.batch</groupId>
+			<artifactId>anyframe-enterprise-batch-runtime</artifactId>
+			<version>4.0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>velocity</groupId>
+			<artifactId>velocity-dep</artifactId>
+			<version>1.4</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.0.1-FINAL</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Test Scope Libraries -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.6</version>
+			<scope>test</scope>
+		</dependency>
+
+
+
+
+
+
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>runtime</artifactId>
+			<version>3.3.100-v20070530</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.mod4j.org.eclipse</groupId>
+			<artifactId>jface</artifactId>
+			<version>3.5.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>ui</artifactId>
+			<version>3.3.0-I20070614-0800</version>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,6 @@
+﻿Anyframe Batch CHANGELOG
+==========================
+http://www.anyframejava.org
+
+Initial release version 1.0.0 (2012-11-08)
+
