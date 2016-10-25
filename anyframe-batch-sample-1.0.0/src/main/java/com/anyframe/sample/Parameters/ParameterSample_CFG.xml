@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xslt="http://xml.apache.org/xslt"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" 
+       xsi:schemaLocation="http://www.anyframejava.org/schema/batch 
+                           http://www.anyframejava.org/schema/batch/schema.xsd
+                           http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+                           http://www.springframework.org/schema/jee
+                           http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+
+		
+	<job id="ParameterJob" name="ParameterJob" xmlns="http://www.anyframejava.org/schema/batch">
+		<description>로그에 파라미터를 출력하는 샘플용 배치작업입니다.</description>
+		<parameters>
+			<parameter key="TEST">jobParamSample</parameter>
+		</parameters>
+		
+		<step id="parameter" name="ParameterStep" type="java" class="com.anyframe.sample.Parameters.ParameterSample">
+			<description>로그에 파라미터를 출력하는 스탭.</description>
+			<parameters>
+				<parameter key="TEST">stepParamSample</parameter>
+			</parameters>
+		</step>
+	</job>
+	
+</beans>

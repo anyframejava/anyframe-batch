@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- generated with ${servicePackage}.${serviceClass} -->
+<sql>
+#foreach($queryId in $queryIdList)
+	<query id="$queryId">
+   
+	</query>
+	
+#end
+</sql>

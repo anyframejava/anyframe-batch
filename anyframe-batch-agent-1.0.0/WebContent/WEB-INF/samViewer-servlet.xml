@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="samViewer" class="com.sds.anyframe.batch.agent.service.SamViewer" />
+	<bean name="hessianServiceExporter"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">		<property name="service">			<ref bean="samViewer" />		</property>
+		<property name="serviceInterface">			<value>com.sds.anyframe.batch.agent.service.PageSupport</value>		</property>	</bean>
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">		<property name="mappings">			<props>				<prop key="/samViewer.do">hessianServiceExporter</prop>			</props>		</property>	</bean></beans>

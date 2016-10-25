@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration 
+    xmlns:log4j="http://jakarta.apache.org/log4j/"  debug="true">
+    
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+    	<layout class="org.apache.log4j.PatternLayout">
+    		<param name="ConversionPattern"
+    			value="[%d{yyyy-MM-dd HH:mm:ss}] %-5p %c{1} : %m%n" />
+    	</layout>
+    </appender>
+
+	<!-- Do not modify anyframeAppender. anyframeAppender is used in framework internally. -->
+	<appender name="anyframeAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="MaxFileSize" value="10MB" />
+		<param name="maxBackupIndex" value="1" />
+		<param name="Append" value="true" />
+		<param name="File" value="/DATA/batch/Log/App/job.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="[%d{yyyy-MM-dd HH:mm:ss}] %-5p %c{1} : %m%n" />
+		</layout>
+	</appender>
+	
+	<!-- Do not modify stepAppender. stepAppender is used in framework internally. -->
+	<appender name="stepAppender"
+		class="org.apache.log4j.RollingFileAppender">
+		<param name="MaxFileSize" value="10MB" />
+		<param name="maxBackupIndex" value="1" />
+		<param name="Append" value="true" />
+		<param name="File" value="/DATA/batch/Log/App/job.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="[%d{yyyy-MM-dd HH:mm:ss}] %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="org.springframework" additivity="false">
+		<level value="error" />
+		<appender-ref ref="anyframeAppender"/>
+	</logger>
+	
+	<logger name="com.sds.anyframe.batch" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="anyframeAppender"/>
+	</logger>
+	
+	<logger name="StaticScriptLogger" additivity="false">
+		<level value="info" />
+		<appender-ref ref="anyframeAppender"/>
+	</logger>
+
+	<!-- logger for stdout, stderr stream of shell script -->
+	<logger name="ShellScriptLogger" additivity="false">
+		<level value="info" />
+		<appender-ref ref="stepAppender"/>
+	</logger>
+
+	<!-- query logger for AbstractDAO -->
+	<logger name="queryLogger" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="stepAppender"/>
+	</logger>
+
+	
+	<!-- logger for execution query of DB Reader/Writer -->
+	<logger name="RunningQueryLogger" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="stepAppender"/>
+	</logger>
+	
+	<!-- logger for loading query -->
+	<logger name="StaticQueryLogger" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="stepAppender"/>
+	</logger>
+
+	
+	<!-- logger for MessageFormatter which logs batch job result -->
+	<logger name="MessageLogger" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="stepAppender"/>
+	</logger>
+	
+    <root>
+        <level value="debug"/>
+        <appender-ref ref="stepAppender"/>
+    </root> 
+	
+</log4j:configuration>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+<!--
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="com.sds.anyframe.batch.manager.Application">
+         </run>
+      </application>
+   </extension>
+-->
+
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Batch Manager"
+            class="com.sds.anyframe.batch.manager.BatchManagerPerspective"
+            icon="icons/batchmanager.gif"
+            id="com.sds.anyframe.batch.manager.perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+         <category name="Anyframe Views"	id="com.sds.anyframe.views">
+		</category>
+      <view
+            class="com.sds.anyframe.batch.manager.view.JobExplorerView"
+            id="com.sds.anyframe.batch.manager.jobexplorer"
+            icon="icons/batchmanager.gif"
+            name="Job Explorer"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+       <editor
+            name="Log Editor"
+			icon="icons/log.gif"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="com.sds.anyframe.batch.manager.view.logEditor.ReadOnlyLogEditor"
+            id="com.sds.anyframe.batch.manager.view.logEditor.ReadOnlyLogEditor">
+      </editor>
+      <editor
+            class="com.sds.anyframe.batch.manager.view.xmlEditor.XMLEditor"
+            id="com.sds.anyframe.batch.manager.view.xmlEditor.XMLEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            icon="icons/batchmanager.gif"
+            name="Job Config Editor"/>
+  	  <editor
+            class="com.sds.anyframe.batch.manager.view.JobMonitorView"
+            id="com.sds.anyframe.batch.manager.jobmonitor"
+            icon="icons/batchmanager.gif"
+            name="Job Monitor"/>
+      <editor
+            class="com.sds.anyframe.batch.manager.view.JobHistoryView"
+            id="com.sds.anyframe.batch.manager.jobhistory"
+            icon="icons/batchmanager.gif"
+            name="Job History"/>
+   </extension>
+   <extension
+         id="com.sds.anyframe.batch.manager"
+         name="Batch Execution Manager"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="com.sds.anyframe.batch.manager.application"
+            name="Batch Execution Manager">
+         <property
+               name="appName"
+               value="Batch Execution Manager">
+         </property>
+      </product>
+   </extension>
+   
+    <!-- preference page 
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="com.sds.anyframe.preferences.PreferencePage"
+			class="com.sds.anyframe.batch.manager.preperence.BatchPreferencePage"
+			id="com.sds.anyframe.batch.manager.preperence.BatchPreferencePage"
+			name="Batch Manager">	
+		</page>
+	</extension>
+	-->
+
+	<!-- preference page -->
+	<extension point="org.eclipse.ui.preferencePages">
+	   <page class="com.sds.anyframe.batch.manager.preperence.BatchManagerFirstPreferencePage"
+			 id="com.sds.anyframe.batch.manager.preperence.BatchManagerFirstPreferencePage"
+			 name="Anyframe Batch">
+	   </page>
+		<page category="com.sds.anyframe.batch.manager.preperence.BatchManagerFirstPreferencePage"
+			class="com.sds.anyframe.batch.manager.preperence.BatchManagerPreferencePage"
+			id="com.sds.anyframe.batch.manager.preperence.BatchManagerPreferencePage"
+			name="Batch Manager">	
+		</page> 
+		<!-- <page category="com.sds.anyframe.batch.manager.preperence.BatchManagerFirstPreferencePage"
+			class="com.sds.anyframe.batch.manager.preperence.EnvironmentVariablesPreferencePage"
+			id="com.sds.anyframe.batch.manager.preperence.EnvironmentVariablesPreferencePage"
+			name="Environment Variables">	
+		</page>
+		-->
+	</extension> 
+	
+	<!--
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution 
+			adaptable="true" 
+			objectClass="org.eclipse.jdt.core.IPackageFragment"
+			id="anyframeProjectMenu" >
+			<menu 
+				id="anyframe" 
+				label="Anyframe Wi&amp;zards"
+				path="additions">
+				<separator name="batchGroup"/>
+				</menu>
+		</objectContribution>	 
+		<objectContribution 
+			adaptable="true"
+			objectClass="org.eclipse.jdt.core.IPackageFragment"
+			id="anyframeProjectMenus1" >
+			<action
+				class="com.sds.anyframe.batch.manager.actions.OpenBatchCreationWizard"
+				id="com.sds.anyframe.batch.manager.actions.OpenBatchCreationWizard"
+				label="Batch Wizard"
+				icon="icons/batchmanager.gif"
+				menubarPath="anyframe/batchGroup">
+			</action>
+		</objectContribution>
+		
+		<objectContribution 
+			adaptable="true" 
+			objectClass="org.eclipse.jdt.core.ICompilationUnit"
+			id="anyframeProjectMenu" >
+			<menu 
+				id="anyframe" 
+				label="Anyframe Wizards"
+				path="additions">
+				<separator name="batchGroup"/>
+			</menu>
+		</objectContribution>
+		 
+	</extension>
+	-->
+    <extension point="org.eclipse.ui.propertyPages">
+		<page objectClass="org.eclipse.core.resources.IProject"
+		    category="com.sds.anyframe.property.ui.AnyFramePropertyPage"
+			adaptable="true" class="com.sds.anyframe.batch.manager.property.BatchManagerPropertyPage"
+			id="com.sds.anyframe.batch.manager.property.BatchManagerPropertyPage" name="Batch Manager">
+		</page>
+	</extension>
+    <extension
+          point="org.eclipse.ui.actionSets">
+       <actionSet
+             id="com.sds.anyframe.batch.manager.actionSet"
+             label="Open Batch Manager UI"
+             visible="true">
+          <menu
+                id="Batch"
+                label="Batch Manager &amp;Menu">
+             <separator
+                   name="batchGroup">
+             </separator>
+          </menu>
+          <action
+                class="com.sds.anyframe.batch.manager.actions.OpenJobMonitorAction"
+                icon="icons/batchmanager.gif"
+                id="com.sds.anyframe.batch.manager.actions.OpenJobMonitorAction"
+                label="&amp;Job Monitor"
+                menubarPath="window/additions"
+                toolbarPath="Normal/additions"/>
+       </actionSet>
+    </extension>
+</plugin>

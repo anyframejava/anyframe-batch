@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.anyframe.batch</groupId>
+	<artifactId>anyframe-batch-agent</artifactId>
+	<name>Anyframe Batch Agent</name>
+	<version>1.0.0</version>
+	<packaging>war</packaging>
+
+	<properties>
+		<encodingtype>UTF-8</encodingtype>
+		<jdkversion>1.6</jdkversion>
+		<spring.version>2.5.5</spring.version>
+	</properties>
+
+  <!-- Profile별 war plugin (-P snapshot, -P release 실행) -->
+	<profiles>
+		<!-- Batch Agent Snapshot-->
+		<profile>
+			<id>snapshot</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+			</properties>
+			<build>
+				<plugins>
+				<!-- Version class creation -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.3</version>
+						<executions>
+							<execution>
+								<id>generate-version-class</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<ant antfile="build-version.xml" inheritAll="false"
+											inheritRefs="false">
+											<property name="version"
+												value="${project.version}.${maven.build.timestamp}" />
+											<property name="src.dir" value="${project.basedir}/src/main/java" />
+										</ant>
+									</tasks>
+									<sourceRoot>
+										${project.basedir}/src/main/java
+					          </sourceRoot>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+            	</plugins>
+			</build>
+		</profile>
+		<!-- Batch Agent Release-->
+		<profile>
+			<id>release</id>
+			<properties>
+				<maven.build.timestamp.format>yyyy/MM/dd</maven.build.timestamp.format>
+			</properties>
+			<build>
+				<plugins>
+				<!-- Version class creation -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.3</version>
+						<executions>
+							<execution>
+								<id>generate-version-class</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<ant antfile="build-version.xml" inheritAll="false"
+											inheritRefs="false">
+											<property name="version"
+												value="${project.version}		( Build Date : ${maven.build.timestamp} )" />
+											<property name="src.dir" value="${project.basedir}/src/main/java" />
+										</ant>
+									</tasks>
+									<sourceRoot>
+										${project.basedir}/src/main/java
+					          </sourceRoot>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Library copy -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/lib</outputDirectory>
+									<overWriteReleases>true</overWriteReleases>
+									<overWriteSnapshots>true</overWriteSnapshots>
+									<overWriteIfNewer>true</overWriteIfNewer>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Version class copy -->
+			   		<plugin>
+					    <groupId>org.apache.maven.plugins</groupId>
+					    <artifactId>maven-antrun-plugin</artifactId>
+					    <version>1.3</version>
+					    <executions>
+				       <!-- Copy version property  -->
+							<execution>
+								<id>copy-licenses</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+									<!--  version property -->
+										<copy todir="${project.build.directory}/${project.artifactId}-${project.version}" overwrite="true">
+											<fileset dir="${project.basedir}/lic/" includes="*" />
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+					    </executions>
+					  </plugin>
+            	</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<!-- Build Settings -->
+	<build>
+		<plugins>
+
+		<!--  War Creation : exclude META-INF/maven directory and executable with   java -jar XXX.war  -->
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-war-plugin</artifactId>
+			<version>2.2</version>
+			<configuration>
+			<!-- exclude META-INF/maven directory -->
+				<archive>
+					<manifest>
+						<mainClass>Version</mainClass>
+					</manifest>
+					<addMavenDescriptor>false</addMavenDescriptor>
+				</archive>
+				<warSourceDirectory>${project.basedir}/WebContent</warSourceDirectory>
+				<warSourceExcludes>**/*.jar</warSourceExcludes>
+			</configuration>
+		</plugin>
+
+		<plugin>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.3.2</version>
+			<configuration>
+				<source>${jdkversion}</source>
+				<target>${jdkversion}</target>
+				<encoding>${encodingtype}</encoding>
+				<compilerVersion>${jdkversion}</compilerVersion>
+			</configuration>
+		</plugin>
+
+		<plugin>
+     		<groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-deploy-plugin</artifactId>
+		    <version>2.5</version>
+		    <configuration>
+		        <updateReleaseInfo>true</updateReleaseInfo>
+		    </configuration>
+		</plugin>
+		
+		<!-- source deploy -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+	<!-- Version class copy -->
+   		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-antrun-plugin</artifactId>
+		    <version>1.3</version>
+		    <executions>
+	       <!-- Copy version property  -->
+				<execution>
+					<id>copy-config</id>
+					<phase>process-resources</phase>
+					<goals>
+						<goal>run</goal>
+					</goals>
+					<configuration>
+						<tasks>
+						<!--  version property -->
+							<copy todir="${project.build.directory}/classes/properties/" overwrite="true">
+								<fileset dir="${project.basedir}/src/main/java/" includes="*.properties" />
+							</copy>
+						</tasks>
+					</configuration>
+				</execution>
+			<!--  copy version class for excutable war -->
+				<execution>
+					<id>version-class-replacement</id>
+					<phase>prepare-package</phase>
+					<goals>
+						<goal>run</goal>
+					</goals>
+					<configuration>
+						<tasks>
+							<copy todir="${project.build.directory}/${project.artifactId}-${project.version}/">
+								<fileset dir="${project.build.directory}/classes/">
+									<include name="Version.class" />
+								</fileset>
+							</copy>
+						</tasks>
+					</configuration>
+				</execution>
+		    </executions>
+		  </plugin>
+
+	<!-- JavaDoc creation  -->
+		  <plugin>
+		  	<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<version>2.8.1</version>
+			<executions>
+				<execution>
+					<id>attach-javadocs</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		   </plugin>
+
+<!-- jUnit 테스트 -->
+		  <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-surefire-plugin</artifactId>
+		    <version>2.8.1</version>
+		    <configuration>
+			<excludes>
+				<exclude>**/*$*</exclude>
+			</excludes>
+			<includes>
+				<include>**/*Test*.java</include>
+			</includes>
+		    </configuration>
+		  </plugin>
+
+<!-- PMD -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>2.7.1</version>
+				<configuration>
+					<rulesets>
+						<ruleset>${project.basedir}/ruleset.xml</ruleset>
+					</rulesets>
+					<sourceEncoding>${encodingtype}</sourceEncoding>
+					<targetJdk>${jdkversion}</targetJdk>
+					<minimumTokens>10</minimumTokens>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>pmd</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- code coverage -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<formats>
+						<format>xml</format>
+						<format>html</format>
+					</formats>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>cobertura</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+		<!--  support Plugin for latest version of m2e   -->
+  	<pluginManagement>
+  		<plugins>
+  			<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+  			<plugin>
+  				<groupId>org.eclipse.m2e</groupId>
+  				<artifactId>lifecycle-mapping</artifactId>
+  				<version>1.0.0</version>
+  				<configuration>
+  					<lifecycleMappingMetadata>
+  						<pluginExecutions>
+  							<pluginExecution>
+  								<pluginExecutionFilter>
+  									<groupId>
+  										org.apache.maven.plugins
+  									</groupId>
+  									<artifactId>
+  										maven-antrun-plugin
+  									</artifactId>
+  									<versionRange>
+  										[1.3,)
+  									</versionRange>
+  									<goals>
+  										<goal>run</goal>
+  									</goals>
+  								</pluginExecutionFilter>
+  								<action>
+  									<ignore></ignore>
+  								</action>
+  							</pluginExecution>
+  						</pluginExecutions>
+  					</lifecycleMappingMetadata>
+  				</configuration>
+  			</plugin>
+  		</plugins>
+  	</pluginManagement>
+
+	</build>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>com.anyframe.batch</groupId>
+			<artifactId>anyframe-batch-agent-interfaces</artifactId>
+			<version>1.0.0</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-dbcp</artifactId>
+					<groupId>commons-dbcp</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-io</artifactId>
+					<groupId>commons-io</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-pool</artifactId>
+					<groupId>commons-pool</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	<!-- Compile Scope Libraries -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>2.2</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.2.2</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-pool</artifactId>
+					<groupId>commons-pool</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>2.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derbyclient</artifactId>
+			<version>10.8.2.2</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt</artifactId>
+			<version>1.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junitperf</groupId>
+			<artifactId>junitperf</artifactId>
+			<version>1.8</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- 3rd party upload (for jdk1.5) -->
+<!--
+		<dependency>
+  			<groupId>key</groupId>
+  			<artifactId>keys</artifactId>
+  			<version>15</version>
+  			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>11.2.0.2.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jgroups</groupId>
+			<artifactId>jgroups-all</artifactId>
+			<version>2.8.0.GA</version>
+			<scope>compile</scope>
+		</dependency>
+		-->
+		<!-- 3rd party upload (for jdk1.6) -->
+		<dependency>
+			<groupId>org.jgroups</groupId>
+			<artifactId>jgroups</artifactId>
+			<version>2.11.0.GA</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+  			<groupId>key</groupId>
+  			<artifactId>keys</artifactId>
+  			<version>16</version>
+  			<scope>compile</scope>
+		</dependency>
+		<!--                          -->
+
+		<!--  Spring API -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+			<version>${spring.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!--            -->
+
+		<!--  Test Only  -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<encoding>${encodingtype}</encoding>
+					<overview>${project.basedir}/src/main/java/overview.html</overview>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<distributionManagement>
+		<repository>
+			<id>anyframe-releases</id>
+			<url>http://70.121.244.11:8081/nexus/content/repositories/anyframe-releases</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>anyframe-snapshots</id>
+			<url>http://70.121.244.11:8081/nexus/content/repositories/anyframe-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>

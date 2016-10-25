@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<xs:schema xmlns="http://www.anyframejava.org/schema/batch"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.anyframejava.org/schema/batch"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+
+	<xs:annotation>
+		<xs:documentation><![CDATA[
+	Defines the configuration elements for Spring Batch Core.
+		]]></xs:documentation>
+	</xs:annotation>
+
+
+
+	<xs:element name="job">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="description" type="xs:string"	minOccurs="0" maxOccurs="1"/>
+				<xs:element name="parameters" type="parametersType" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="listeners" type="listenersType" minOccurs="0" maxOccurs="1"/>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:element name="step" type="stepType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="thread" type="threadType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:string" />
+			<xs:attribute name="name" type="xs:string" />
+			<xs:attribute name="concurrent" default="false" type="xs:boolean" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="listenersType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="listener">
+				<xs:complexType>
+					<xs:attribute name="class" type="xs:string" />
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="parametersType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="parameter">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="key" type="xs:string" />
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="stepType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string"	minOccurs="0" maxOccurs="1"/>
+			<xs:element name="parameters" type="parametersType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="listeners" type="listenersType" minOccurs="0" maxOccurs="1"/>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element name="step" type="stepType" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:sequence>
+					<xs:element name="resources" type="resourcesType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="script" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" />
+		<xs:attribute name="type" type="xs:string" />
+		<xs:attribute name="name" type="xs:string" />
+		<xs:attribute name="class" type="xs:string" />
+		<xs:attribute name="query_file" type="xs:string" />
+	</xs:complexType>
+	
+	<xs:complexType name="resourcesType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="reader" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attributeGroup ref="resourceAttr"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="writer" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attributeGroup ref="resourceAttr"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="updater" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attributeGroup ref="resourceAttr"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="resource" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attributeGroup ref="resourceAttr"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="threadType">
+		<xs:sequence>
+			<xs:element name="step" type="stepType" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" />
+		<xs:attribute name="type" type="xs:string" />
+	</xs:complexType>
+
+	<xs:attributeGroup name="resourceAttr">
+		<xs:attribute name="id" type="xs:string" />
+		<xs:attribute name="type" type="xs:string"/>
+		<xs:attribute name="url" type="xs:string" />
+		<xs:attribute name="colsep" type="xs:string" />
+		<xs:attribute name="linesep" type="xs:string" />
+		<xs:attribute name="charset" type="xs:string" />
+		<xs:attribute name="trim" type="xs:boolean" />
+		<xs:attribute name="maxsize" type="xs:string" />
+		<xs:attribute name="deleteEmpty" type="xs:boolean" />
+		<xs:attribute name="fixed" type="xs:boolean" />
+		<xs:attribute name="escape" type="xs:boolean" />
+		<xs:attribute name="batchUpdate" type="xs:boolean" />
+	</xs:attributeGroup>
+
+</xs:schema>

@@ -1,0 +1,121 @@
+###################################################
+##### [ N:N Batch Program Template ]
+##### this template covers next prototypes :
+##### 			sli.co.pm.pmldt.PMAtrInfoBSvc.java	 	/ PPMLDT1000_CFG.xml	/ 1:1 db2file
+##### 			sli.co.pm.pmldt.PMCustInfoBSvc.java		/ PPMLDT2000_CFG.xml	/ 1:1 db2file
+##### 			sli.co.pm.pmldt.PMAccountBSvc.java		/ PPMLDT4000_CFG.xml	/ 1:1 file2file
+##### 			sli.co.pm.pmldt.PMAtrCustBSvc.java	 	/ PPMLDT3000_CFG.xml	/ N:1 file2file
+##### 			sli.co.pm.pmldt.PMAtrAcnoBSvc.java	 	/ PPMLDT5000_CFG.xml	/ N:1 file2file
+##### 			sli.co.pm.pmldt.PMAddupKeyBSvc.java	 	/ PPMLDT6000_CFG.xml	/ 1:N file2file
+##### 			sli.co.pm.pmldt.PMCodeSaveBSvc.java	 	/ PPMLDT8000_CFG.xml	/ 1:1 file2db (?)
+###################################################
+#if (${servicePackage} != "")
+package ${servicePackage};
+#end
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.sds.anyframe.batch.common.exception.FatalException;
+import com.sds.anyframe.batch.core.item.support.AnyframeItemReader;
+import com.sds.anyframe.batch.core.item.support.AnyframeItemReaderFactory;
+import com.sds.anyframe.batch.core.item.support.AnyframeItemWriter;
+import com.sds.anyframe.batch.core.item.support.AnyframeItemWriterFactory;
+import com.sds.anyframe.batch.core.item.support.ResourceType;
+import com.sds.anyframe.batch.core.step.tasklet.AnyframeAbstractTasklet;
+
+#foreach($importStatement in $importStatements)
+import ${importStatement};
+#end
+
+/**
+#foreach($lineText in $serviceDescList)
+ * ${lineText}
+#end
+ * @name_ko	${serviceClassKo}
+ * @stereotype  BATCH
+ * @author $!author
+ */
+
+public class ${serviceClass} extends AnyframeAbstractTasklet {
+	
+	private static final Log logger = LogFactory.getLog(${serviceClass}.class);
+#foreach($item in $items)
+	private int ${item.itemHandler}Count = 0;
+#end
+
+	public void execute(AnyframeItemReaderFactory itemReader, AnyframeItemWriterFactory itemWriter) throws FatalException {
+		setCommitInterval(100000);
+		
+		try {
+
+#foreach($item in $items)
+#if(${item.itemIoType} == "reader")
+			AnyframeItemReader $item.itemHandler = itemReader.getItemReader("$item.itemHandler", new ${item.itemVoClass}(), ResourceType.$item.itemType);
+#if($item.itemType != "SAM")
+			${item.itemHandler}.loadSQL("$item.itemQueryId");
+#end 
+			${item.itemVoClass} ${item.itemVoClassVar} = (${item.itemVoClass}) ${item.itemHandler}.read();
+			${item.itemHandler}Count++;
+			
+#elseif(${item.itemIoType} == "writer")
+			AnyframeItemWriter $item.itemHandler = itemWriter.getItemWriter("$item.itemHandler", ResourceType.${item.itemType});
+#if($item.itemType != "SAM")
+			${item.itemHandler}.loadSQL("$item.itemQueryId");
+#end
+#if($item.itemVoClass != "")
+			${item.itemVoClass} ${item.itemVoClassVar} = new ${item.itemVoClass}();
+#end
+
+#end ##end of if
+#end ##end of foreach
+#set( $stringFlag =0)
+			while (#foreach($item in $items)#if(${item.itemIoType} == "reader")#if($stringFlag== 0) #set( $stringFlag=1) #else && #end${item.itemVoClassVar} != null#end#end ) {
+
+//===== Business Logic Here! =====
+#foreach($item in $items)
+#if(${item.itemIoType} == "reader")
+//				${item.itemVoClassVar}.getXXX()
+#else
+
+#if($item.itemVoClass != "")
+//				${item.itemVoClassVar}.setXXX()
+				${item.itemHandler}.write(${item.itemVoClassVar});
+#else
+//===== TO DO : Object must be filled! =====
+				${item.itemHandler}.write(new Object[] {});
+#end
+				${item.itemHandler}Count++;
+#end ##end of if
+#end ##end of foreach
+
+#foreach($item in $items)
+#if(${item.itemIoType} == "reader")
+				${item.itemVoClassVar} = (${item.itemVoClass}) ${item.itemHandler}.read();
+				${item.itemHandler}Count++;
+#end ##end of if
+#end ##end of foreach
+			}
+
+			logger.debug("===========================");
+			logger.debug("IN/OUT 건수 확인              ");
+			logger.debug("===========================");
+			logger.debug("작업일자 :  " + System.getProperty("ODATE"));
+			logger.debug("---------------------------");
+#foreach($item in $items)
+#if(${item.itemIoType} == "reader")
+			logger.debug(" READ  COUNT ($item.itemHandler) = " + ${item.itemHandler}Count);
+#else
+			logger.debug(" WRITE COUNT ($item.itemHandler) = " + ${item.itemHandler}Count);
+#end ##end of if				
+#end ##end of foreach
+			logger.debug(" Time        = " + elapsedTime()+" ms");
+			logger.debug("===========================");
+
+		} catch (Throwable e) {
+			logger.error(e.getMessage(), e);
+			throw new FatalException(
+					"Error/Exception detected during read/write processing : " + this.getClass().getName(), e);
+		}
+	}
+}

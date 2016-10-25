@@ -1,0 +1,105 @@
+## CURRENTLY NOT USED
+###################################################
+##### [ 1:1 Batch Program Template ]
+##### this template covers next prototypes :
+##### 			sli.co.pm.pmldt.PMAtrInfoBSvc.java	 	/ PPMLDT1000_CFG.xml	/ 1:1 db2file
+##### 			sli.co.pm.pmldt.PMCustInfoBSvc.java		/ PPMLDT2000_CFG.xml	/ 1:1 db2file
+##### 			sli.co.pm.pmldt.PMAccountBSvc.java		/ PPMLDT4000_CFG.xml	/ 1:1 file2file
+###################################################
+#if (${servicePackage} != "")
+package ${servicePackage};
+#end
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.sds.anyframe.batch.common.exception.FatalException;
+import com.sds.anyframe.batch.core.item.support.AnyframeItemReader;
+import com.sds.anyframe.batch.core.item.support.AnyframeItemReaderFactory;
+import com.sds.anyframe.batch.core.item.support.AnyframeItemWriter;
+import com.sds.anyframe.batch.core.item.support.AnyframeItemWriterFactory;
+import com.sds.anyframe.batch.core.item.support.ResourceType;
+import com.sds.anyframe.batch.core.step.tasklet.AnyframeAbstractTasklet;
+
+#foreach($importStatement in $importStatements)
+import ${importStatement};
+#end
+
+/**
+#foreach($lineText in $serviceDescList)
+ * ${lineText}
+#end
+ * @name_ko	${serviceClassKo}
+ * @stereotype  BATCH
+ * @author $!author
+ */
+
+public class ${serviceClass} extends AnyframeAbstractTasklet {
+	
+	private static final Log logger = LogFactory.getLog(${serviceClass}.class);
+	private int writeCount = 0, readCount = 0;
+	
+	public void execute(AnyframeItemReaderFactory itemReader, AnyframeItemWriterFactory itemWriter) throws FatalException {
+		setCommitInterval(100000);
+		
+		try {
+
+#set( $readerInit = "false")
+#set( $writerInit = "false")
+#set( $readerVoVar = "")
+#set( $readerVo = "")
+#set( $writerVoVar = "")
+#set( $reader = "")
+#set( $writer = "")
+#foreach($item in $items)
+#if(${item.itemIoType} == "reader" && $readerInit == "false")
+			AnyframeItemReader $item.itemHandler = itemReader.getItemReader("$item.itemHandler", new ${item.itemVoClass}(), ResourceType.$item.itemType);
+#if($item.itemType != "SAM")
+			${item.itemHandler}.loadSQL("$item.itemQueryId");
+#end 
+			${item.itemVoClass} ${item.itemVoClassVar} = (${item.itemVoClass}) ${item.itemHandler}.read();
+			readCount++;
+			
+#set( $readerVoVar = ${item.itemVoClassVar} )
+#set( $readerVo = ${item.itemVoClass})
+#set( $reader = $item.itemHandler )
+#set( $readerInit = "true")
+#elseif(${item.itemIoType} == "writer" && $writerInit == "false")
+			AnyframeItemWriter $item.itemHandler = itemWriter.getItemWriter("$item.itemHandler", ResourceType.${item.itemType});
+			${item.itemVoClass} ${item.itemVoClassVar} = new ${item.itemVoClass}();
+			
+#set( $writerVoVar = ${item.itemVoClassVar} )
+#set( $writer = $item.itemHandler )
+#set( $writerInit = "true")
+#end ##end of if
+#end ##end of foreach
+
+			while ($readerVoVar != null) {
+
+//===== Business Logic Here! =====
+//				${writerVoVar}.setXXX(${readerVoVar}.getXXX());
+
+				${writer}.write(${writerVoVar});
+				writeCount++;
+
+				${readerVoVar} = (${readerVo}) ${reader}.read();
+				readCount++;
+			}
+
+			logger.debug("===========================");
+			logger.debug("IN/OUT 건수 확인              ");
+			logger.debug("===========================");
+			logger.debug("작업일자 :  " + System.getProperty("ODATE"));
+			logger.debug("---------------------------");
+			logger.debug(" READ  COUNT = " + readCount);
+			logger.debug(" WRITE COUNT = " + writeCount);
+			logger.debug(" Time        = " + elapsedTime()+" ms");
+			logger.debug("===========================");
+
+		} catch (Throwable e) {
+			logger.error(e.getMessage(), e);
+			throw new FatalException(
+					"Error/Exception detected during read/write processing : " + this.getClass().getName(), e);
+		}
+	}
+}

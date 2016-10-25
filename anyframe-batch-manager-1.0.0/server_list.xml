@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<servers>
+	<server ip="70.7.105.66:15009"  name="afe01-p"/>
+	<server ip="70.7.105.66:15019"  name="afe01-s"/>
+	<server ip="127.0.0.1:8080"  name="localhost"/>
+</servers>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<bean id="stepStateClient" class="com.sds.anyframe.batch.agent.state.step.StepStateClientImpl">
+		<constructor-arg ref="stepStateContext" />
+	</bean>
+		<bean name="exporter"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="stepStateClient" />
+		<property name="serviceInterface" value="com.sds.anyframe.batch.agent.state.step.IStepStateClient" />
+	</bean>
+	
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/stepStateClient.do">exporter</prop>
+			</props>
+		</property>
+	</bean>
+	
+</beans>

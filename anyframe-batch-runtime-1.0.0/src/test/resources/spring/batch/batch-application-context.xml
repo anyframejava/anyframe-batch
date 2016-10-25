@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.jasypt.spring.properties.EncryptablePropertyPlaceholderConfigurer">
+		<constructor-arg ref="configurationEncryptor" />
+		<property name="locations">
+			<list>
+				<value>classpath:spring/batch/jdbc.properties</value>
+			</list>
+		</property>
+
+	</bean>
+
+	<bean id="environmentVariablesConfiguration"
+		class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+		<property name="algorithm" value="PBEWithMD5AndDES" />
+		<property name="passwordSysPropertyName" value="BATCH_KEY" />
+	</bean>
+
+	<bean id="configurationEncryptor"
+		class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<property name="config" ref="environmentVariablesConfiguration" />
+	</bean>
+
+	<bean id="jobRepository" class="com.sds.anyframe.batch.core.repository.AgentJobRepository">
+	</bean>
+	
+	<bean id="beanFactory" class="com.sds.anyframe.batch.core.bean.BeanFactory"></bean>
+	
+	<bean id="com.anyframe.batch.stepFactory" class="com.sds.anyframe.batch.config.factory.StepFactory">
+		<property name="jobRepository" ref="jobRepository" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="coreListeners">
+			<list>
+				<bean class="com.sds.anyframe.batch.core.step.support.StepLoggingListener"/>
+				<!-- resource 의 URL에 포함된  파라미터를 치환하는 listener -->
+				<bean class="com.sds.anyframe.batch.core.step.support.StepUrlReplaceListener"/>
+				<!-- Step 실행 중 에러가 발생하는 경우, 불완전하게 생성된 파일을 삭제 처리하는 listener -->
+				<bean class="com.sds.anyframe.batch.core.step.support.StepResourceListener"/>
+			</list>
+		</property>
+		<property name="stepTypeMap">
+			<map>
+				<entry key="java"     value="com.sds.anyframe.batch.core.step.JavaStep" />
+				<entry key="parallel" value="com.sds.anyframe.batch.core.step.ParallelStep" />
+				<entry key="delete"   value="com.sds.anyframe.batch.core.step.DeleteStep" />
+				<entry key="shell"    value="com.sds.anyframe.batch.core.step.ShellStep" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="com.anyframe.batch.resourceFactory" class="com.sds.anyframe.batch.config.factory.ResourceFactory">
+		<property name="resourceTypeMap">
+			<map>
+				<entry key="SAM" value-ref="&amp;samFactory"/>
+				<entry key="VSAM" value-ref="&amp;vsamFactory"/>
+				<entry key="DB"   value-ref="&amp;dbFactory"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="samFactory" class="com.sds.anyframe.batch.infra.support.ByteResourceFactoryBean" lazy-init="true" />
+	<bean id="vsamFactory" class="com.sds.anyframe.batch.infra.support.StringResourceFactoryBean" lazy-init="true" />
+	<bean id="dbFactory" class="com.sds.anyframe.batch.infra.support.DatabaseResourceFactoryBean" lazy-init="true" />
+	
+</beans>
